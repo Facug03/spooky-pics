@@ -1,16 +1,11 @@
 import type { Metadata } from 'next'
-import localFont from 'next/font/local'
+import { Arimo } from 'next/font/google'
+
 import './globals.css'
 
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900'
-})
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900'
+const arimo = Arimo({
+  subsets: ['latin'],
+  display: 'swap'
 })
 
 export const metadata: Metadata = {
@@ -24,10 +19,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
-      </body>
+    <html lang="en" className={arimo.className}>
+      <body>{children}</body>
     </html>
   )
 }
