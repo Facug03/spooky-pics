@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Arimo } from 'next/font/google'
 
+import { Header } from '@/sections/Header'
+import { stack } from '@styled-system/patterns'
 import './globals.css'
 
 const arimo = Arimo({
@@ -20,7 +22,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={arimo.className}>
-      <body>{children}</body>
+      <body
+        className={stack({
+          maxWidth: '85.375rem',
+          margin: '0 auto',
+          minHeight: '100dvh',
+          gap: 0
+        })}
+      >
+        <Header />
+        {children}
+      </body>
     </html>
   )
 }
