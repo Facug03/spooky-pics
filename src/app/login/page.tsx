@@ -18,20 +18,13 @@ export default function LogIn() {
           <Card.Header asChild>
             <header>
               <Card.Title>Log in</Card.Title>
-              <Card.Description>
-                Log in to your account to continue
-              </Card.Description>
+              <Card.Description>Log in to your account to continue</Card.Description>
             </header>
           </Card.Header>
           <Card.Body asChild>
             <form className={stack()} action={signInWithOAuth}>
               {providers.map((provider) => (
-                <Button
-                  key={provider}
-                  name={provider}
-                  value={provider}
-                  textTransform="capitalize"
-                >
+                <Button key={provider} name={provider} value={provider} textTransform="capitalize">
                   {provider}
                 </Button>
               ))}
