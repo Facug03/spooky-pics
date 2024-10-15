@@ -27,6 +27,7 @@ export default function RootLayout({
           maxWidth: '85.375rem',
           margin: '0 auto',
           minHeight: '100dvh',
+          paddingX: 4,
           gap: 0
         })}
       >
