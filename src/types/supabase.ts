@@ -76,6 +76,7 @@ export type Database = {
           description: string | null
           download_count: number | null
           id: number
+          image_public_id: string
           image_url: string
           title: string | null
           user_id: string
@@ -85,6 +86,7 @@ export type Database = {
           description?: string | null
           download_count?: number | null
           id?: number
+          image_public_id: string
           image_url: string
           title?: string | null
           user_id: string
@@ -94,6 +96,7 @@ export type Database = {
           description?: string | null
           download_count?: number | null
           id?: number
+          image_public_id?: string
           image_url?: string
           title?: string | null
           user_id?: string
