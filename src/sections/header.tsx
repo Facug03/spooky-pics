@@ -4,7 +4,7 @@ import { css } from '@styled-system/css'
 import { hstack } from '@styled-system/patterns'
 import Link from 'next/link'
 
-import { signOut } from '@/actions/log-out'
+import { UserMenu } from '@/components/user-menu'
 import { createClient } from '@/utils/supabase/server'
 
 export async function Header() {
@@ -19,20 +19,18 @@ export async function Header() {
         <Heading as="p">Spooky Pics</Heading>
 
         {!user && (
-          <Button asChild rounded="full">
+          <Button asChild bgColor="primary">
             <Link href="/login">Log in</Link>
           </Button>
         )}
 
         {user && (
-          <div className={hstack({ gap: 2 })}>
-            <Button asChild variant="outline" rounded="full">
+          <div className={hstack({ gap: 6 })}>
+            <Button asChild size="sm" bgColor="primary">
               <Link href="/upload">Upload</Link>
             </Button>
 
-            <form action={signOut}>
-              <Button rounded="full">Log out</Button>
-            </form>
+            <UserMenu avatarURL={user.user_metadata?.avatar_url ?? ''} fullName={user.user_metadata?.full_name ?? ''} />
           </div>
         )}
       </nav>
