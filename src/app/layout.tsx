@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { Arimo } from 'next/font/google'
+import { Inter } from 'next/font/google'
 
-import { Header } from '@/sections/Header'
+import { Header } from '@/sections/header'
 import { stack } from '@styled-system/patterns'
 import './globals.css'
 
-const arimo = Arimo({
+const inter = Inter({
   subsets: ['latin'],
   display: 'swap'
 })
@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={arimo.className}>
+    <html lang="en" className={inter.className}>
       <body
         className={stack({
           maxWidth: '85.375rem',
