@@ -1,0 +1,22 @@
+export const loadingPhrases = [
+  'Summoning spooky spirits...',
+  'Conjuring the eerie essence...',
+  'Brewing some frightful magic...',
+  'Whispering to the shadows...',
+  'Enlisting ghosts for assistance...',
+  'Unveiling a spine-chilling vision...',
+  'Waking the creatures of the night...',
+  'Raising a spectral masterpiece...',
+  'Crafting your haunted imagery...',
+  'Weaving webs of eerie pixels...',
+  'Stirring a cauldron of dark creativity...',
+  'Invoking the spirits of spooky AI...',
+  'Enigmatic transformation in progress...',
+  'Letting the phantoms take over...',
+  'Enshrouding your image in mystery...',
+  'Summoning a ghoulish creation...',
+  'Dabbling in dark artistry...',
+  'Your spooky transformation awaits...',
+  'Unlocking haunted dimensions...',
+  'Calling forth AI magic from the beyond...'
+]

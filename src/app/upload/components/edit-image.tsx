@@ -1,5 +1,14 @@
 'use client'
 
+import {
+  ArrowCircleLeft,
+  ArrowCircleRight,
+  Ghost,
+  MinusCircle,
+  SelectionBackground,
+  Swap,
+  XCircle
+} from '@phosphor-icons/react'
 import { type GetCldImageUrlOptions, getCldImageUrl } from 'next-cloudinary'
 import Image from 'next/image'
 import { type PropsWithChildren, useEffect, useState } from 'react'
@@ -15,12 +24,13 @@ import { Text } from '@/components/ui/text'
 import { areValuesInObjTruthy } from '@/utils/areValuesInObjTruthy'
 import { css } from '@styled-system/css'
 import { hstack, stack } from '@styled-system/patterns'
-import { getTransformedImage } from '../services/getTransformedImage'
+import { getTransformedImage } from '../services/get-transformed-image'
+import { LoadingText } from './loading-text'
 
 const options = [
-  { id: 'background', label: 'Background' },
-  { id: 'remove', label: 'Remove' },
-  { id: 'replace', label: 'Replace' }
+  { id: 'background', label: 'Background', icon: <SelectionBackground size={32} /> },
+  { id: 'remove', label: 'Remove', icon: <MinusCircle size={32} /> },
+  { id: 'replace', label: 'Replace', icon: <Swap size={32} /> }
 ]
 
 interface Props {
@@ -32,14 +42,14 @@ interface Props {
 }
 
 export function EditImage({ publicId, step, changeStep, transformations, changeTransformations }: Props) {
-  const [urlTransformed, setUrlTransformed] = useState(getCldImageUrl({ src: publicId, width: 600 }))
+  const [urlTransformed, setUrlTransformed] = useState(getCldImageUrl({ src: publicId, width: 800 }))
   const [isLoading, setIsLoading] = useState(false)
-
+  console.log({ transformations })
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!areValuesInObjTruthy(transformations)) {
-      if (urlTransformed !== getCldImageUrl({ src: publicId, width: 600 })) {
-        setUrlTransformed(getCldImageUrl({ src: publicId, width: 600 }))
+      if (urlTransformed !== getCldImageUrl({ src: publicId, width: 800 })) {
+        setUrlTransformed(getCldImageUrl({ src: publicId, width: 800 }))
       }
 
       return
@@ -55,8 +65,11 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
       replaceBackground: transformations.replaceBackground,
       replace: transformations.replace,
       remove: transformations.remove,
-      width: 600
+      quality: 100,
+      width: 800
     })
+
+    console.log({ url })
 
     getTransformedImage({
       url,
@@ -81,32 +94,48 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
     }
   }, [transformations])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (publicId.length === 0) return
 
-    if (urlTransformed.length > 0) return
+    const url = getCldImageUrl({ src: publicId, width: 800 })
 
-    setUrlTransformed(getCldImageUrl({ src: publicId, width: 600 }))
+    console.log({ badUrlMaybe: url })
+
+    if (url.length === 0) return
+
+    setUrlTransformed(url)
   }, [publicId])
 
   return (
     <section className={stack()}>
       <header className={hstack({ justify: 'space-between' })}>
-        <Heading as="h1" fontSize="2xl">
-          Edit the image to make it spooky
+        <Heading
+          as="h2"
+          className={hstack({
+            gap: 2,
+            alignItems: 'center',
+            fontSize: '2xl',
+            color: 'white',
+            bgColor: 'primary',
+            fontWeight: 'bold',
+            paddingX: '4',
+            paddingY: '1',
+            rounded: 'full'
+          })}
+        >
+          Edit the image to make it spooky <Ghost size={32} />
         </Heading>
 
         {publicId && (
           <nav className={hstack({ gap: 2 })}>
             {step > 1 && (
-              <Button variant="outline" rounded="full" size="lg" onClick={() => changeStep(step - 1)}>
-                Back
+              <Button variant="outline" size="lg" onClick={() => changeStep(step - 1)}>
+                <ArrowCircleLeft size={32} /> Back
               </Button>
             )}
 
-            <Button rounded="full" size="lg" onClick={() => changeStep(step + 1)}>
-              Next
+            <Button size="lg" onClick={() => changeStep(step + 1)}>
+              Next <ArrowCircleRight size={32} />
             </Button>
           </nav>
         )}
@@ -119,11 +148,11 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
       <Tabs.Root defaultValue="background" width="max-content">
         <Tabs.List>
           {options.map((option) => (
-            <Tabs.Trigger key={option.id} value={option.id}>
-              {option.label}
+            <Tabs.Trigger disabled={isLoading} key={option.id} value={option.id}>
+              {option.label} {option.icon}
             </Tabs.Trigger>
           ))}
-          <Tabs.Indicator />
+          <Tabs.Indicator className={css({ bgColor: 'primary' })} />
         </Tabs.List>
 
         <Tabs.Content value={options[0].id}>
@@ -147,12 +176,14 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
               alignItems: 'end'
             })}
           >
-            <Field.Root maxWidth="max-content">
+            <Field.Root maxWidth="max-content" disabled={isLoading}>
               <Field.Label>Prompt to generate background</Field.Label>
               <Field.Input name="background" placeholder="Add fire..." />
             </Field.Root>
 
-            <Button>Generate</Button>
+            <Button variant="outline" disabled={isLoading}>
+              Generate
+            </Button>
           </form>
         </Tabs.Content>
 
@@ -177,12 +208,14 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
               alignItems: 'end'
             })}
           >
-            <Field.Root maxWidth="max-content">
+            <Field.Root maxWidth="max-content" disabled={isLoading}>
               <Field.Label>Item to remove</Field.Label>
               <Field.Input name="remove" placeholder="Ex: Mask on the floor" />
             </Field.Root>
 
-            <Button>Generate</Button>
+            <Button variant="outline" disabled={isLoading}>
+              Generate
+            </Button>
           </form>
         </Tabs.Content>
 
@@ -198,7 +231,11 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
               if (replace && insert) {
                 changeTransformations({
                   ...transformations,
-                  replace: [replace.toString(), insert.toString()]
+                  replace: {
+                    from: replace.toString(),
+                    to: insert.toString(),
+                    preserveGeometry: true
+                  }
                 })
               }
             }}
@@ -208,22 +245,25 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
               alignItems: 'end'
             })}
           >
-            <Field.Root maxWidth="max-content">
+            <Field.Root maxWidth="max-content" disabled={isLoading}>
               <Field.Label>Item to replace</Field.Label>
-              <Field.Input required name="replace" placeholder="Cat" />
+              <Field.Input required name="replace" placeholder="Clothes" />
             </Field.Root>
 
-            <Field.Root maxWidth="max-content">
+            <Field.Root maxWidth="max-content" disabled={isLoading}>
               <Field.Label>Item to insert</Field.Label>
-              <Field.Input required name="insert" placeholder="Dog" />
+              <Field.Input required name="insert" placeholder="Halloween costume" />
             </Field.Root>
 
-            <Button>Replace</Button>
+            <Button variant="outline" disabled={isLoading}>
+              Replace
+            </Button>
           </form>
         </Tabs.Content>
       </Tabs.Root>
 
       <TagsInput.Root
+        disabled={isLoading}
         flexDirection="row"
         alignItems="center"
         value={
@@ -277,8 +317,13 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
                           }
                         }}
                       >
-                        <IconButton visibility={value === 'None' ? 'hidden' : 'visible'} variant="link" size="xs">
-                          X
+                        <IconButton
+                          visibility={value === 'None' ? 'hidden' : 'visible'}
+                          variant="link"
+                          size="xs"
+                          aria-label="Close"
+                        >
+                          <XCircle size={16} />
                         </IconButton>
                       </TagsInput.ItemDeleteTrigger>
                     </TagsInput.ItemPreview>
@@ -308,6 +353,7 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
 
       {isLoading && (
         <ImageWrapper>
+          <LoadingText />
           <Skeleton width="full" height="full" />
         </ImageWrapper>
       )}
