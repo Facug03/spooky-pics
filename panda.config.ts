@@ -1,7 +1,17 @@
-import { defineConfig } from '@pandacss/dev'
+import { defineConfig, defineGlobalStyles } from '@pandacss/dev'
+
+const globalCss = defineGlobalStyles({
+  html: {
+    scrollBehavior: 'smooth',
+    _motionReduce: {
+      scrollBehavior: 'auto'
+    }
+  }
+})
 
 export default defineConfig({
   // Whether to use css reset
+  globalCss,
   preflight: true,
   presets: ['@pandacss/preset-base', '@park-ui/panda-preset'],
   // Where to look for your css declarations
@@ -12,7 +22,21 @@ export default defineConfig({
 
   // Useful for theme customization
   theme: {
-    extend: {}
+    extend: {
+      tokens: {
+        colors: {
+          primary: { value: '#9337c0' },
+          secondary: { value: '#f96300' }
+        }
+      },
+      recipes: {
+        button: {
+          base: {
+            borderRadius: '0.5rem'
+          }
+        }
+      }
+    }
   },
   jsxFramework: 'react',
   // The output directory for your css system
