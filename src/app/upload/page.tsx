@@ -2,7 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 
 import { stack } from '@styled-system/patterns'
-import { Steps } from './sections/Steps'
+import { Steps } from './sections/steps'
 
 export default async function Upload() {
   const supabase = createClient()
@@ -15,9 +15,11 @@ export default async function Upload() {
     return redirect('/login')
   }
 
+  const { data } = await supabase.from('tag').select('*').order('name', { ascending: true })
+
   return (
     <main className={stack({ paddingY: '10' })}>
-      <Steps />
+      <Steps tags={data ?? []} />
     </main>
   )
 }
