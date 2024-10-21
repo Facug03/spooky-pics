@@ -62,7 +62,6 @@ export function UploadImage({ changeAspectRatio }: Props) {
           sources: ['local', 'url', 'camera']
         }}
         onSuccess={({ info }) => {
-          console.log({ info })
           if (typeof info === 'string') {
             return
           }

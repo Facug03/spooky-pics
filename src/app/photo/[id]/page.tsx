@@ -34,7 +34,6 @@ export default async function Photo({ params }: Props) {
     .single()
 
   if (error || !data) {
-    console.log(error)
     return null
   }
 
@@ -63,7 +62,7 @@ export default async function Photo({ params }: Props) {
           <div className={hstack({ gap: '2' })}>
             <Like postId={post.id} liked={Boolean(dataLike)} />
 
-            <Download imageUrl={post.image_url} aspectRatio={post.aspect_ratio} />
+            <Download imageUrl={post.image_url} />
           </div>
         </header>
 

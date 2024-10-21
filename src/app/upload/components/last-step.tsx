@@ -46,8 +46,6 @@ export function LastStep({ aspectRatio, tags, changeStep, publicId, step, transf
     const title = formData.get('title') as string
     const description = formData.get('description') as string
 
-    console.log(title, description, tagsSelected)
-
     if (tagsSelected.length === 0) {
       setErrors({
         ...errors,

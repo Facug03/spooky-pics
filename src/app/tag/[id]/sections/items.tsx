@@ -18,8 +18,6 @@ export function Items({ tag, items }: Props) {
 
   const photos = data && data.length > 0 ? [...items, ...data.flatMap((m) => m.data ?? [])] : items
 
-  console.log({ reachEnd, data, photos })
-
   return (
     <section className={css({ color: 'primary' })}>
       {photos.length > 0 && (

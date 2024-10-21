@@ -15,8 +15,6 @@ export function Like({ postId, liked }: Props) {
   const [like, setLike] = useState(liked)
   const [loading, setLoading] = useState(false)
 
-  console.log({ liked, like })
-
   return (
     <form
       onSubmit={async (e) => {

@@ -1,27 +1,17 @@
 'use client'
 
 import { DownloadSimple } from '@phosphor-icons/react'
-import { getCldImageUrl } from 'next-cloudinary'
 
 import { Button } from '@/components/ui/button'
-import { removeTransformations } from '@/utils/remove-transformations'
+import { generateDownloadUrl } from '@/utils/generate-download-url'
 
 interface Props {
   imageUrl: string
-  aspectRatio: string | null
 }
 
-export function Download({ imageUrl, aspectRatio }: Props) {
+export function Download({ imageUrl }: Props) {
   const onClick = async () => {
-    const width = aspectRatio ? Number.parseInt(aspectRatio.split('/')[0]) : undefined
-    const height = aspectRatio ? Number.parseInt(aspectRatio.split('/')[1]) : undefined
-
-    const image = getCldImageUrl({
-      src: removeTransformations(imageUrl),
-      quality: 100
-    })
-
-    console.log({ width, height, aspectRatio, image })
+    const image = generateDownloadUrl(imageUrl)
 
     const response = await fetch(image)
 
