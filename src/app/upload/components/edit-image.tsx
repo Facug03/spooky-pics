@@ -7,12 +7,14 @@ import {
   MinusCircle,
   SelectionBackground,
   Swap,
+  WarningCircle,
   XCircle
 } from '@phosphor-icons/react'
 import { type GetCldImageUrlOptions, getCldImageUrl } from 'next-cloudinary'
 import Image from 'next/image'
-import { type PropsWithChildren, useEffect, useState } from 'react'
+import { type PropsWithChildren, useEffect, useRef, useState } from 'react'
 
+import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Field } from '@/components/ui/field'
 import { Heading } from '@/components/ui/heading'
@@ -28,9 +30,9 @@ import { getTransformedImage } from '../services/get-transformed-image'
 import { LoadingText } from './loading-text'
 
 const options = [
+  { id: 'replace', label: 'Replace', icon: <Swap size={32} /> },
   { id: 'background', label: 'Background', icon: <SelectionBackground size={32} /> },
-  { id: 'remove', label: 'Remove', icon: <MinusCircle size={32} /> },
-  { id: 'replace', label: 'Replace', icon: <Swap size={32} /> }
+  { id: 'remove', label: 'Remove', icon: <MinusCircle size={32} /> }
 ]
 
 interface Props {
@@ -44,7 +46,9 @@ interface Props {
 export function EditImage({ publicId, step, changeStep, transformations, changeTransformations }: Props) {
   const [urlTransformed, setUrlTransformed] = useState(getCldImageUrl({ src: publicId, width: 800 }))
   const [isLoading, setIsLoading] = useState(false)
-  console.log({ transformations })
+  const [error, setError] = useState('')
+  const lastTransformation = useRef<keyof typeof transformations | null>(null)
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!areValuesInObjTruthy(transformations)) {
@@ -59,13 +63,14 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
     const signal = controller.signal
 
     setIsLoading(true)
+    setError('')
 
     const url = getCldImageUrl({
       src: publicId,
       replaceBackground: transformations.replaceBackground,
       replace: transformations.replace,
       remove: transformations.remove,
-      quality: 100,
+      quality: 90,
       width: 800
     })
 
@@ -78,14 +83,15 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
     })
       .then(([error]) => {
         if (error) {
-          console.error(error)
+          setError('An error has ocurred while transforming the image')
+
           return
         }
 
         setUrlTransformed(url)
       })
-      .catch((error) => {
-        console.error(error)
+      .catch(() => {
+        setError('An error has ocurred while transforming the image')
       })
       .finally(() => setIsLoading(false))
 
@@ -99,15 +105,39 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
 
     const url = getCldImageUrl({ src: publicId, width: 800 })
 
-    console.log({ badUrlMaybe: url })
-
     if (url.length === 0) return
 
     setUrlTransformed(url)
   }, [publicId])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (error.length === 0) return
+
+    if (lastTransformation.current === 'replace') {
+      changeTransformations({
+        ...transformations,
+        replace: undefined
+      })
+    }
+
+    if (lastTransformation.current === 'replaceBackground') {
+      changeTransformations({
+        ...transformations,
+        replaceBackground: ''
+      })
+    }
+
+    if (lastTransformation.current === 'remove') {
+      changeTransformations({
+        ...transformations,
+        remove: ''
+      })
+    }
+  }, [error])
+
   return (
-    <section className={stack()}>
+    <section className={stack({ gap: '4' })}>
       <header className={hstack({ justify: 'space-between' })}>
         <Heading
           as="h2"
@@ -145,122 +175,134 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
         Change the background, replace or remove things with our AI.
       </Text>
 
-      <Tabs.Root defaultValue="background" width="max-content">
-        <Tabs.List>
-          {options.map((option) => (
-            <Tabs.Trigger disabled={isLoading} key={option.id} value={option.id}>
-              {option.label} {option.icon}
-            </Tabs.Trigger>
-          ))}
-          <Tabs.Indicator className={css({ bgColor: 'primary' })} />
-        </Tabs.List>
+      <div>
+        <Tabs.Root defaultValue="replace" width="max-content">
+          <Tabs.List>
+            {options.map((option) => (
+              <Tabs.Trigger disabled={isLoading} key={option.id} value={option.id}>
+                {option.label} {option.icon}
+              </Tabs.Trigger>
+            ))}
+            <Tabs.Indicator className={css({ bgColor: 'primary' })} />
+          </Tabs.List>
 
-        <Tabs.Content value={options[0].id}>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
+          <Tabs.Content value={options[0].id}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
 
-              const formData = new FormData(e.target as HTMLFormElement)
-              const formPrompt = formData.get('background')
+                const formData = new FormData(e.target as HTMLFormElement)
+                const replace = formData.get('replace')
+                const insert = formData.get('insert')
 
-              if (formPrompt) {
-                changeTransformations({
-                  ...transformations,
-                  replaceBackground: formPrompt.toString()
-                })
-              }
-            }}
-            className={hstack({
-              gap: 2,
-              marginBottom: '10',
-              alignItems: 'end'
-            })}
-          >
-            <Field.Root maxWidth="max-content" disabled={isLoading}>
-              <Field.Label>Prompt to generate background</Field.Label>
-              <Field.Input name="background" placeholder="Add fire..." />
-            </Field.Root>
+                if (replace && insert) {
+                  changeTransformations({
+                    ...transformations,
+                    replace: {
+                      from: replace.toString(),
+                      to: insert.toString(),
+                      preserveGeometry: true
+                    }
+                  })
+                  lastTransformation.current = 'replace'
+                }
+              }}
+              className={hstack({
+                gap: 2,
+                marginBottom: '6',
+                alignItems: 'end'
+              })}
+            >
+              <Field.Root maxWidth="max-content" disabled={isLoading}>
+                <Field.Label>Item to replace</Field.Label>
+                <Field.Input required name="replace" placeholder="Clothes" />
+              </Field.Root>
 
-            <Button variant="outline" disabled={isLoading}>
-              Generate
-            </Button>
-          </form>
-        </Tabs.Content>
+              <Field.Root maxWidth="max-content" disabled={isLoading}>
+                <Field.Label>Item to insert</Field.Label>
+                <Field.Input required name="insert" placeholder="Halloween costume" />
+              </Field.Root>
 
-        <Tabs.Content value={options[1].id}>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
+              <Button variant="outline" disabled={isLoading}>
+                Replace
+              </Button>
+            </form>
+          </Tabs.Content>
 
-              const formData = new FormData(e.target as HTMLFormElement)
-              const remove = formData.get('remove')
+          <Tabs.Content value={options[1].id}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
 
-              if (remove) {
-                changeTransformations({
-                  ...transformations,
-                  remove: remove.toString()
-                })
-              }
-            }}
-            className={hstack({
-              gap: 2,
-              marginBottom: '10',
-              alignItems: 'end'
-            })}
-          >
-            <Field.Root maxWidth="max-content" disabled={isLoading}>
-              <Field.Label>Item to remove</Field.Label>
-              <Field.Input name="remove" placeholder="Ex: Mask on the floor" />
-            </Field.Root>
+                const formData = new FormData(e.target as HTMLFormElement)
+                const formPrompt = formData.get('background')
 
-            <Button variant="outline" disabled={isLoading}>
-              Generate
-            </Button>
-          </form>
-        </Tabs.Content>
+                if (formPrompt) {
+                  changeTransformations({
+                    ...transformations,
+                    replaceBackground: formPrompt.toString()
+                  })
+                  lastTransformation.current = 'replaceBackground'
+                }
+              }}
+              className={hstack({
+                gap: 2,
+                marginBottom: '6',
+                alignItems: 'end'
+              })}
+            >
+              <Field.Root maxWidth="max-content" disabled={isLoading}>
+                <Field.Label>Prompt to generate background</Field.Label>
+                <Field.Input name="background" placeholder="Add fire..." />
+              </Field.Root>
 
-        <Tabs.Content value={options[2].id}>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
+              <Button variant="outline" disabled={isLoading}>
+                Generate
+              </Button>
+            </form>
+          </Tabs.Content>
 
-              const formData = new FormData(e.target as HTMLFormElement)
-              const replace = formData.get('replace')
-              const insert = formData.get('insert')
+          <Tabs.Content value={options[2].id}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
 
-              if (replace && insert) {
-                changeTransformations({
-                  ...transformations,
-                  replace: {
-                    from: replace.toString(),
-                    to: insert.toString(),
-                    preserveGeometry: true
-                  }
-                })
-              }
-            }}
-            className={hstack({
-              gap: 2,
-              marginBottom: '10',
-              alignItems: 'end'
-            })}
-          >
-            <Field.Root maxWidth="max-content" disabled={isLoading}>
-              <Field.Label>Item to replace</Field.Label>
-              <Field.Input required name="replace" placeholder="Clothes" />
-            </Field.Root>
+                const formData = new FormData(e.target as HTMLFormElement)
+                const remove = formData.get('remove')
 
-            <Field.Root maxWidth="max-content" disabled={isLoading}>
-              <Field.Label>Item to insert</Field.Label>
-              <Field.Input required name="insert" placeholder="Halloween costume" />
-            </Field.Root>
+                if (remove) {
+                  changeTransformations({
+                    ...transformations,
+                    remove: remove.toString()
+                  })
+                  lastTransformation.current = 'remove'
+                }
+              }}
+              className={hstack({
+                gap: 2,
+                marginBottom: '6',
+                alignItems: 'end'
+              })}
+            >
+              <Field.Root maxWidth="max-content" disabled={isLoading}>
+                <Field.Label>Item to remove</Field.Label>
+                <Field.Input name="remove" placeholder="Ex: Mask on the floor" />
+              </Field.Root>
 
-            <Button variant="outline" disabled={isLoading}>
-              Replace
-            </Button>
-          </form>
-        </Tabs.Content>
-      </Tabs.Root>
+              <Button variant="outline" disabled={isLoading}>
+                Generate
+              </Button>
+            </form>
+          </Tabs.Content>
+        </Tabs.Root>
+
+        <Alert.Root maxWidth="xs" paddingY="2" borderColor="red" opacity={error.length > 0 ? 'unset' : '0'}>
+          <Alert.Icon asChild>
+            <WarningCircle size={32} color="red" />
+          </Alert.Icon>
+          <Alert.Title color="red">{error}</Alert.Title>
+        </Alert.Root>
+      </div>
 
       <TagsInput.Root
         disabled={isLoading}
