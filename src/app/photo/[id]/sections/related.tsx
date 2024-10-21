@@ -20,7 +20,7 @@ export async function Related({ postId, tags }: Props) {
       'tag.name',
       tags.map((tag) => tag.name)
     )
-    .range(0, 20)
+    .range(0, 19)
     .neq('id', postId)
 
   if (error || !data) {
