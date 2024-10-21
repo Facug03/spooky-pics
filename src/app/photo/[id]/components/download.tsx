@@ -18,17 +18,15 @@ export function Download({ imageUrl, aspectRatio }: Props) {
 
     const image = getCldImageUrl({
       src: removeTransformations(imageUrl),
-      width: width ?? 1200,
-      height: height,
-      quality: 100,
-      format: 'webp'
+      quality: 100
     })
 
     console.log({ width, height, aspectRatio, image })
 
     const response = await fetch(image)
 
-    // Verifica si la respuesta es exitosa
+    const format = response.headers.get('content-type')?.split('/')[1]
+
     if (!response.ok) {
       console.error('Failed to download file:', response.statusText)
       return
@@ -38,7 +36,7 @@ export function Download({ imageUrl, aspectRatio }: Props) {
 
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
-    link.download = 'spooky_image.webp'
+    link.download = `spooky_image.${format}`
     document.body.appendChild(link)
     link.click()
 
