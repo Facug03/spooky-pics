@@ -1,11 +1,11 @@
-import { Button } from '@/components/ui/button'
-import { Heading } from '@/components/ui/heading'
-import { css } from '@styled-system/css'
-import { hstack } from '@styled-system/patterns'
+import Image from 'next/image'
 import Link from 'next/link'
 
+import { Button } from '@/components/ui/button'
 import { UserMenu } from '@/components/user-menu'
 import { createClient } from '@/utils/supabase/server'
+import { css } from '@styled-system/css'
+import { hstack } from '@styled-system/patterns'
 
 export async function Header() {
   const supabase = createClient()
@@ -15,8 +15,12 @@ export async function Header() {
 
   return (
     <header className={css({ paddingY: 2 })}>
-      <nav className={hstack({ justify: 'space-between' })}>
-        <Heading as="p">Spooky Pics</Heading>
+      <nav className={hstack({ justify: 'space-between', alignItems: 'center' })}>
+        <Link href="/" aria-label="Spooky Pics">
+          <div className={css({ position: 'relative', height: '8', width: '36' })}>
+            <Image src="/spooky-logo.svg" alt="Spooky Pics" fill />
+          </div>
+        </Link>
 
         {!user && (
           <Button asChild bgColor="primary">
