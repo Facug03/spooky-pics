@@ -1,19 +1,19 @@
 import { createClient } from '@/utils/supabase/server'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ReactCompareSlider } from 'react-compare-slider'
 
 import { Button } from '@/components/ui/button'
 import { Heading } from '@/components/ui/heading'
-import { Masonry } from '@/components/ui/masonry'
 import { Text } from '@/components/ui/text'
+import { Photos } from '@/sections/photos'
 import { css } from '@styled-system/css'
 import { grid, hstack, stack } from '@styled-system/patterns'
-import Link from 'next/link'
 
 export default async function Home() {
   const supabase = createClient()
   const { data: dataUser } = await supabase.auth.getUser()
-  const { error: errorPost, data: dataPost } = await supabase.from('post').select('*')
+  const { error: errorPost, data: dataPost } = await supabase.from('post').select('*').range(0, 19)
   const { error: errorTag, data: dataTag } = await supabase.from('tag').select('*').order('name', { ascending: true })
 
   if (errorPost || !dataPost || errorTag || !dataTag) {
@@ -34,7 +34,9 @@ export default async function Home() {
           })}
         >
           Discover your favorites <br />
-          <span className={css({ color: 'primary' })}>Spooky Pics</span>
+          <div className={css({ position: 'relative', height: '16', width: 'auto' })}>
+            <Image src="/spooky-logo.svg" alt="Spooky Pics" fill />
+          </div>
         </Heading>
 
         <Text
@@ -44,7 +46,7 @@ export default async function Home() {
             fontSize: 'xl',
             lineHeight: 'tight',
             marginBottom: '4',
-            color: 'gray'
+            color: 'gray.11'
           })}
         >
           Share your spookiest moments with the world, discover costumes, decorations and more.
@@ -69,7 +71,7 @@ export default async function Home() {
           <span className={css({ color: 'primary' })}>share it with others</span>
         </Heading>
 
-        <Text as="p" className={css({ fontSize: 'lg', marginBottom: '8', color: 'gray' })}>
+        <Text as="p" className={css({ fontSize: 'lg', marginBottom: '8', color: 'gray.11' })}>
           You can spookify your images with our AI.
         </Text>
 
@@ -105,19 +107,21 @@ export default async function Home() {
         />
       </section>
 
-      <section className={grid({ gridTemplateColumns: 'repeat(auto-fit, minmax(9.375rem, 1fr))', gap: '2' })}>
-        {dataTag.map((tag) => {
-          return (
-            <Button key={tag.name} size="md" variant="outline" textTransform="capitalize">
-              {tag.name}
-            </Button>
-          )
-        })}
+      <section>
+        <ul className={grid({ gridTemplateColumns: 'repeat(auto-fit, minmax(9.375rem, 1fr))', gap: '2' })}>
+          {dataTag.map((tag) => {
+            return (
+              <li key={tag.name}>
+                <Button size="md" width="full" variant="outline" textTransform="capitalize" asChild>
+                  <Link href={`/tag/${tag.name}`}>{tag.name}</Link>
+                </Button>
+              </li>
+            )
+          })}
+        </ul>
       </section>
 
-      <section id="content">
-        <Masonry items={dataPost} />
-      </section>
+      <Photos items={dataPost} />
     </main>
   )
 }
