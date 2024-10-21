@@ -11,8 +11,6 @@ interface Props {
 }
 
 export const Masonry = ({ items }: Props) => {
-  console.log({ items })
-
   return (
     <MasonryPlock
       items={items}
@@ -26,7 +24,6 @@ export const Masonry = ({ items }: Props) => {
           href={`/photo/${item.id}`}
           key={item.id}
           className={css({
-            position: 'relative',
             width: '100%',
             height: 'auto'
           })}
