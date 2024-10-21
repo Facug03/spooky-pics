@@ -18,7 +18,7 @@ export function Photos({ items }: Props) {
   const photos = data && data.length > 0 ? [...items, ...data.flatMap((m) => m.data ?? [])] : items
 
   return (
-    <section id="content" className={css({ color: 'primary' })}>
+    <section id="explore" className={css({ color: 'primary' })}>
       {photos.length > 0 && (
         <>
           <div className={css({ minH: items.length >= 10 ? '90vh' : 'auto' })}>
