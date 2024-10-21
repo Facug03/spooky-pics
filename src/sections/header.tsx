@@ -1,3 +1,4 @@
+import { UploadSimple, UserCircle } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -24,14 +25,38 @@ export async function Header() {
 
         {!user && (
           <Button asChild bgColor="primary">
-            <Link href="/login">Log in</Link>
+            <Link href="/login">
+              <span
+                className={css({
+                  display: 'none',
+                  sm: {
+                    display: 'inherit'
+                  }
+                })}
+              >
+                Log in
+              </span>{' '}
+              <UserCircle size={32} />
+            </Link>
           </Button>
         )}
 
         {user && (
-          <div className={hstack({ gap: 6 })}>
+          <div className={hstack({ gap: '2', sm: { gap: '6' } })}>
             <Button asChild size="sm" bgColor="primary">
-              <Link href="/upload">Upload</Link>
+              <Link href="/upload">
+                <span
+                  className={css({
+                    display: 'none',
+                    sm: {
+                      display: 'inherit'
+                    }
+                  })}
+                >
+                  Upload
+                </span>{' '}
+                <UploadSimple size={32} />
+              </Link>
             </Button>
 
             <UserMenu avatarURL={user.user_metadata?.avatar_url ?? ''} fullName={user.user_metadata?.full_name ?? ''} />

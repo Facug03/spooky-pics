@@ -19,20 +19,29 @@ export function UploadImage({ changeAspectRatio }: Props) {
   const [publicId, setPublicId] = useQueryState('public_id', parseAsString.withDefault(''))
 
   return (
-    <section className={stack()}>
-      <header className={hstack({ justify: 'space-between' })}>
+    <section className={stack({ gap: '6' })}>
+      <header
+        className={hstack({
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          md: { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }
+        })}
+      >
         <Heading
           as="h2"
           className={hstack({
             gap: 2,
             alignItems: 'center',
-            fontSize: '2xl',
+            fontSize: '1rem',
             color: 'white',
             bgColor: 'primary',
             fontWeight: 'bold',
             paddingX: '4',
             paddingY: '1',
-            rounded: 'full'
+            rounded: 'full',
+            sm: {
+              fontSize: '2xl'
+            }
           })}
         >
           First select an image <HandPointing size={32} />
@@ -42,14 +51,14 @@ export function UploadImage({ changeAspectRatio }: Props) {
           <nav>
             {step > 1 && <Button variant="outline">Back</Button>}
 
-            <Button size="lg" onClick={() => setStep(step + 1)}>
+            <Button size={{ smDown: 'md', sm: 'lg' }} onClick={() => setStep(step + 1)}>
               Next <ArrowCircleRight size={32} />
             </Button>
           </nav>
         )}
       </header>
 
-      <Text as="p" marginBottom="8">
+      <Text as="p" marginBottom="8" fontSize={{ smDown: '0.950rem', sm: 'md' }}>
         Choose the image you want to upload and share.
       </Text>
 
@@ -72,7 +81,7 @@ export function UploadImage({ changeAspectRatio }: Props) {
       >
         {({ open }) => {
           return (
-            <Button onClick={() => open()} width="fit-content" size="lg" variant="outline">
+            <Button onClick={() => open()} width="fit-content" size={{ smDown: 'md', sm: 'lg' }} variant="outline">
               {publicId ? 'Change image' : 'Select image'} <Image size={32} />
             </Button>
           )

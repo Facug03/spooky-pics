@@ -1,4 +1,5 @@
 import { createClient } from '@/utils/supabase/server'
+import { Skull } from '@phosphor-icons/react/dist/ssr'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ReactCompareSlider } from 'react-compare-slider'
@@ -8,7 +9,7 @@ import { Heading } from '@/components/ui/heading'
 import { Text } from '@/components/ui/text'
 import { Photos } from '@/sections/photos'
 import { css } from '@styled-system/css'
-import { grid, hstack, stack } from '@styled-system/patterns'
+import { hstack, stack } from '@styled-system/patterns'
 
 export default async function Home() {
   const supabase = createClient()
@@ -21,16 +22,28 @@ export default async function Home() {
   }
 
   return (
-    <main className={stack({ paddingY: '28', gap: '28' })}>
+    <main
+      className={stack({
+        paddingY: '20',
+        gap: '20',
+        sm: {
+          paddingY: '28',
+          gap: '28'
+        }
+      })}
+    >
       <section>
         <Heading
           as="h1"
           className={css({
             textAlign: 'center',
-            fontSize: '6xl',
+            fontSize: '5xl',
             fontWeight: 'bold ',
             lineHeight: 'tight',
-            marginBottom: '8'
+            marginBottom: '8',
+            sm: {
+              fontSize: '6xl'
+            }
           })}
         >
           Discover your favorites <br />
@@ -43,10 +56,14 @@ export default async function Home() {
           as="p"
           className={css({
             textAlign: 'center',
-            fontSize: 'xl',
+            textWrap: 'balance',
+            fontSize: 'md',
             lineHeight: 'tight',
             marginBottom: '4',
-            color: 'gray.11'
+            color: 'gray.11',
+            sm: {
+              fontSize: 'xl'
+            }
           })}
         >
           Share your spookiest moments with the world, discover costumes, decorations and more.
@@ -54,7 +71,9 @@ export default async function Home() {
 
         <div className={hstack({ gap: '8', justifyContent: 'center' })}>
           <Button size="lg" bgColor="primary" asChild>
-            <Link href="/#content">Discover</Link>
+            <Link href="/#explore">
+              Explore <Skull size={32} />
+            </Link>
           </Button>
 
           {!dataUser.user && (
@@ -66,12 +85,31 @@ export default async function Home() {
       </section>
 
       <section>
-        <Heading as="h2" className={css({ fontSize: '4xl', fontWeight: 'bold' })}>
+        <Heading
+          as="h2"
+          className={css({
+            fontSize: '3xl',
+            fontWeight: 'bold',
+            sm: {
+              fontSize: '4xl'
+            }
+          })}
+        >
           Find your next <span className={css({ color: 'primary' })}>costume</span> and{' '}
           <span className={css({ color: 'primary' })}>share it with others</span>
         </Heading>
 
-        <Text as="p" className={css({ fontSize: 'lg', marginBottom: '8', color: 'gray.11' })}>
+        <Text
+          as="p"
+          className={css({
+            fontSize: 'md',
+            marginBottom: '8',
+            color: 'gray.11',
+            sm: {
+              fontSize: 'lg'
+            }
+          })}
+        >
           You can spookify your images with our AI.
         </Text>
 
@@ -81,9 +119,12 @@ export default async function Home() {
             position: 'relative',
             alignSelf: 'center',
             aspectRatio: '16/9',
-            width: '70vw',
+            width: '100%',
             height: 'auto',
             maxWidth: '45rem',
+            sm: {
+              width: '70vw'
+            },
             xl: {
               width: '50vw'
             }
@@ -107,12 +148,31 @@ export default async function Home() {
         />
       </section>
 
+      {/* grid({ gridTemplateColumns: 'repeat(auto-fit, minmax(9.375rem, 1fr))', gap: '2' }) */}
       <section>
-        <ul className={grid({ gridTemplateColumns: 'repeat(auto-fit, minmax(9.375rem, 1fr))', gap: '2' })}>
+        <ul
+          className={css({
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '2',
+            sm: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(9.375rem, 1fr))', gap: '2' }
+          })}
+        >
           {dataTag.map((tag) => {
             return (
               <li key={tag.name}>
-                <Button size="md" width="full" variant="outline" textTransform="capitalize" asChild>
+                <Button
+                  className={css({
+                    width: 'max-content',
+                    sm: {
+                      width: 'full'
+                    }
+                  })}
+                  size={{ smDown: 'xs', sm: 'md' }}
+                  variant="outline"
+                  textTransform="capitalize"
+                  asChild
+                >
                   <Link href={`/tag/${tag.name}`}>{tag.name}</Link>
                 </Button>
               </li>

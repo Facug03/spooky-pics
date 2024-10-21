@@ -137,20 +137,30 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
   }, [error])
 
   return (
-    <section className={stack({ gap: '4' })}>
-      <header className={hstack({ justify: 'space-between' })}>
+    <section className={stack({ gap: '6' })}>
+      <header
+        className={hstack({
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: '2',
+          md: { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }
+        })}
+      >
         <Heading
           as="h2"
           className={hstack({
             gap: 2,
             alignItems: 'center',
-            fontSize: '2xl',
+            fontSize: '1rem',
             color: 'white',
             bgColor: 'primary',
             fontWeight: 'bold',
             paddingX: '4',
             paddingY: '1',
-            rounded: 'full'
+            rounded: 'full',
+            sm: {
+              fontSize: '2xl'
+            }
           })}
         >
           Edit the image to make it spooky <Ghost size={32} />
@@ -159,19 +169,24 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
         {publicId && (
           <nav className={hstack({ gap: 2 })}>
             {step > 1 && (
-              <Button variant="outline" size="lg" onClick={() => changeStep(step - 1)}>
+              <Button
+                variant="outline"
+                size={{ smDown: 'md', sm: 'lg' }}
+                onClick={() => changeStep(step - 1)}
+                disabled={isLoading}
+              >
                 <ArrowCircleLeft size={32} /> Back
               </Button>
             )}
 
-            <Button size="lg" onClick={() => changeStep(step + 1)}>
+            <Button size={{ smDown: 'md', sm: 'lg' }} onClick={() => changeStep(step + 1)} disabled={isLoading}>
               Next <ArrowCircleRight size={32} />
             </Button>
           </nav>
         )}
       </header>
 
-      <Text as="p" marginBottom="8">
+      <Text as="p" marginBottom="8" fontSize={{ smDown: '0.950rem', sm: 'md' }}>
         Change the background, replace or remove things with our AI.
       </Text>
 
@@ -179,7 +194,13 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
         <Tabs.Root defaultValue="replace" width="max-content">
           <Tabs.List>
             {options.map((option) => (
-              <Tabs.Trigger disabled={isLoading} key={option.id} value={option.id}>
+              <Tabs.Trigger
+                disabled={isLoading}
+                key={option.id}
+                value={option.id}
+                fontSize={{ smDown: 'xs', sm: 'md' }}
+                paddingInline={{ smDown: '0', sm: '3' }}
+              >
                 {option.label} {option.icon}
               </Tabs.Trigger>
             ))}
@@ -208,9 +229,14 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
                 }
               }}
               className={hstack({
-                gap: 2,
-                marginBottom: '6',
-                alignItems: 'end'
+                flexDirection: 'column',
+                alignItems: 'start',
+                sm: {
+                  flexDirection: 'row',
+                  gap: 2,
+                  marginBottom: '6',
+                  alignItems: 'end'
+                }
               })}
             >
               <Field.Root maxWidth="max-content" disabled={isLoading}>
@@ -246,9 +272,14 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
                 }
               }}
               className={hstack({
-                gap: 2,
-                marginBottom: '6',
-                alignItems: 'end'
+                flexDirection: 'column',
+                alignItems: 'start',
+                sm: {
+                  flexDirection: 'row',
+                  gap: 2,
+                  marginBottom: '6',
+                  alignItems: 'end'
+                }
               })}
             >
               <Field.Root maxWidth="max-content" disabled={isLoading}>
@@ -279,9 +310,14 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
                 }
               }}
               className={hstack({
-                gap: 2,
-                marginBottom: '6',
-                alignItems: 'end'
+                flexDirection: 'column',
+                alignItems: 'start',
+                sm: {
+                  flexDirection: 'row',
+                  gap: 2,
+                  marginBottom: '6',
+                  alignItems: 'end'
+                }
               })}
             >
               <Field.Root maxWidth="max-content" disabled={isLoading}>

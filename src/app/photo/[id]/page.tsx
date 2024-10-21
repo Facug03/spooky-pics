@@ -51,7 +51,17 @@ export default async function Photo({ params }: Props) {
   return (
     <main className={stack({ paddingY: '10', gap: '8' })}>
       <section className={stack({ gap: '8' })}>
-        <header className={hstack({ justifyContent: 'space-between' })}>
+        <header
+          className={hstack({
+            flexDirection: 'column',
+            gap: '2',
+            alignItems: 'flex-start',
+            sm: {
+              justifyContent: 'space-between',
+              flexDirection: 'row'
+            }
+          })}
+        >
           <div className={hstack({ gap: '2' })}>
             <Avatar src={user?.avatar_url ?? ''} name={user?.full_name ?? ''} />
             <Text as="p" className={css({ fontSize: 'md' })}>
@@ -60,7 +70,7 @@ export default async function Photo({ params }: Props) {
           </div>
 
           <div className={hstack({ gap: '2' })}>
-            <Like postId={post.id} liked={Boolean(dataLike)} />
+            <Like postId={post.id} liked={Boolean(dataLike)} isAuthenticated={Boolean(dataUser.user)} />
 
             <Download imageUrl={post.image_url} />
           </div>
@@ -73,13 +83,25 @@ export default async function Photo({ params }: Props) {
             alignSelf: 'center',
             width: '100%',
             height: 'auto',
-            lg: {
+            '@media (min-width: 350px)': {
+              width: isHorizontal ? '100%' : '75%'
+            },
+            '@media (min-width: 500px)': {
+              width: isHorizontal ? '90%' : '60%'
+            },
+            sm: {
               width: isHorizontal ? '75%' : '35%'
             }
           })}
           style={{ aspectRatio: post.aspect_ratio ? post.aspect_ratio : '1/1' }}
         >
-          <Image className={css({ objectFit: 'contain' })} src={post.image_url} alt={post.title ?? ''} fill />
+          <Image
+            className={css({ objectFit: 'contain' })}
+            src={post.image_url}
+            alt={post.title ?? 'image uploaded'}
+            fill
+            priority
+          />
         </div>
 
         <div>
@@ -97,14 +119,14 @@ export default async function Photo({ params }: Props) {
         </div>
 
         <div className={stack()}>
-          <div>
+          {/* TODO <div>
             <div className={hstack({ gap: '2' })}>
               <DownloadSimple size={18} />
               <Text as="p" color="gray" fontSize="sm">
                 Downloads {post.download_count}
               </Text>
             </div>
-          </div>
+          </div> */}
 
           <div>
             <div className={hstack({ gap: '2' })}>

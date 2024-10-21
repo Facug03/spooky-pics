@@ -1,6 +1,7 @@
 'use client'
 
 import { Heart } from '@phosphor-icons/react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { updateLike } from '@/app/photo/[id]/actions/update-like'
@@ -9,16 +10,23 @@ import { IconButton } from '@/components/ui/icon-button'
 interface Props {
   postId: number
   liked: boolean
+  isAuthenticated: boolean
 }
 
-export function Like({ postId, liked }: Props) {
+export function Like({ postId, liked, isAuthenticated }: Props) {
   const [like, setLike] = useState(liked)
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault()
+
+        if (!isAuthenticated) {
+          router.push('/login')
+          return
+        }
 
         if (loading) return
 

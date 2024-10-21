@@ -86,20 +86,30 @@ export function LastStep({ aspectRatio, tags, changeStep, publicId, step, transf
   }
 
   return (
-    <section className={stack()}>
-      <header className={hstack({ justify: 'space-between' })}>
+    <section className={stack({ gap: '6' })}>
+      <header
+        className={hstack({
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: '2',
+          md: { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }
+        })}
+      >
         <Heading
           as="h2"
           className={hstack({
             gap: 2,
             alignItems: 'center',
-            fontSize: '2xl',
+            fontSize: '1rem',
             color: 'white',
             bgColor: 'primary',
             fontWeight: 'bold',
             paddingX: '4',
             paddingY: '1',
-            rounded: 'full'
+            rounded: 'full',
+            sm: {
+              fontSize: '2xl'
+            }
           })}
         >
           Last Step <RocketLaunch size={32} />
@@ -108,7 +118,7 @@ export function LastStep({ aspectRatio, tags, changeStep, publicId, step, transf
         {publicId && (
           <nav className={hstack({ gap: 2 })}>
             {step > 1 && (
-              <Button variant="outline" onClick={() => changeStep(step - 1)} size="lg">
+              <Button variant="outline" onClick={() => changeStep(step - 1)} size={{ smDown: 'md', sm: 'lg' }}>
                 <ArrowCircleLeft size={32} /> Back
               </Button>
             )}
@@ -116,7 +126,7 @@ export function LastStep({ aspectRatio, tags, changeStep, publicId, step, transf
         )}
       </header>
 
-      <Text as="p" marginBottom="8">
+      <Text as="p" marginBottom="8" fontSize={{ smDown: '0.950rem', sm: 'md' }}>
         Finish the final details and save your image.
       </Text>
 
@@ -164,7 +174,7 @@ export function LastStep({ aspectRatio, tags, changeStep, publicId, step, transf
               <Select.Label>Tags</Select.Label>
               <Select.Control>
                 <Select.Trigger>
-                  <Select.ValueText placeholder="Select a Framework" />
+                  <Select.ValueText placeholder="Select tags" />
                   <CaretDown size={32} />
                 </Select.Trigger>
               </Select.Control>
@@ -190,9 +200,14 @@ export function LastStep({ aspectRatio, tags, changeStep, publicId, step, transf
           </Field.Root>
         )}
 
-        <Button size="lg" bgColor="primary">
-          Save
-        </Button>
+        <div className={stack()}>
+          <Button size={{ smDown: 'md', sm: 'lg' }} bgColor="primary">
+            Save
+          </Button>
+          <small className={css({ fontSize: 'sm', color: 'gray.11' })}>
+            If your image is not spooky enough, it will be automatically removed.
+          </small>
+        </div>
       </form>
     </section>
   )
