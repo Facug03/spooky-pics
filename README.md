@@ -42,5 +42,14 @@ Comparte tus momentos más espeluznantes con el mundo, descubre disfraces, decor
 - Biome (Formater y Linter desarrollado con Rust)
 - Supabase (Base de datos relacional)
 
+## TODO
+
+- Agregar dark mode.
+- Agregar contador de likes y descargas.
+- Mostrar datos de los posts cuando haces hover en el masonry.
+- Agregar filtros y ordenamientos en la pagina de tags.
+- Agregar buscador.
+- Agregar prompts predefenidos. Ej: Zoombify, Vampire, etc.
+
 
 
