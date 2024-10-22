@@ -14,7 +14,7 @@ Comparte tus momentos más espeluznantes con el mundo, descubre disfraces, decor
 1. Clonar el proyecto
 
 ```bash
-  git clone https://github.com/Facug03/spooky-pics/edit/main/README.md
+  git clone https://github.com/Facug03/spooky-pics
   cd spooky-pics
 ```
 
