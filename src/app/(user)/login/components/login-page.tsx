@@ -21,7 +21,7 @@ export function LogInPage() {
         flex: 1
       })}
     >
-      <Card.Root width={{ smDown: 'full', sm: 'sm' }} asChild>
+      <Card.Root width={{ smDown: 'full', sm: 'sm' }} maxW="90vw" asChild>
         <article>
           <Card.Header asChild>
             <header>
