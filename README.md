@@ -25,7 +25,9 @@ Comparte tus momentos más espeluznantes con el mundo, descubre disfraces, decor
   npm install
 ```
 
-3. Iniciar en modo de desarrollo
+3. Crear archivo .env.local y llenar los datos, basado en el .env.example
+
+4. Iniciar en modo de desarrollo
 
 ```bash
   npm run dev
