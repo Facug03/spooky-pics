@@ -31,15 +31,17 @@ export function LastStep({ aspectRatio, tags, changeStep, publicId, step, transf
   const [errors, setErrors] = useState({
     title: '',
     description: '',
-    tags: ''
+    tags: '',
+    errorUploading: ''
   })
   const [tagsSelected, setTagsSelected] = useState<string[]>([])
+  const [loading, setLoading] = useState(false)
 
   const collection = createListCollection({
     items: tags.map((tag) => ({ label: capitalize(tag.name), value: tag.name }))
   })
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const formData = new FormData(e.target as HTMLFormElement)
@@ -67,22 +69,34 @@ export function LastStep({ aspectRatio, tags, changeStep, publicId, step, transf
     setErrors({
       title: '',
       description: '',
-      tags: ''
+      tags: '',
+      errorUploading: ''
     })
-    uploadPost({
-      aspectRatio,
-      description,
-      image_url: getCldImageUrl({
-        src: publicId,
-        replaceBackground: transformations.replaceBackground,
-        replace: transformations.replace,
-        remove: transformations.remove,
-        width: 800
-      }),
-      tags: tagsSelected,
-      title,
-      publicId
-    })
+    setLoading(true)
+    try {
+      await uploadPost({
+        aspectRatio,
+        description,
+        image_url: getCldImageUrl({
+          src: publicId,
+          replaceBackground: transformations.replaceBackground,
+          replace: transformations.replace,
+          remove: transformations.remove,
+          width: 800
+        }),
+        tags: tagsSelected,
+        title,
+        publicId
+      })
+    } catch (_) {
+      setLoading(false)
+      setErrors({
+        title: '',
+        description: '',
+        tags: '',
+        errorUploading: 'An error has ocurred while uploading the image.'
+      })
+    }
   }
 
   return (
@@ -201,9 +215,17 @@ export function LastStep({ aspectRatio, tags, changeStep, publicId, step, transf
         )}
 
         <div className={stack()}>
-          <Button size={{ smDown: 'md', sm: 'lg' }} bgColor="primary">
+          <Button
+            size={{ smDown: 'md', sm: 'lg' }}
+            bgColor="primary"
+            loading={loading}
+            loadingText={loading ? 'Uploading...' : ''}
+          >
             Save
           </Button>
+          {errors.errorUploading.length > 0 && (
+            <small className={css({ fontSize: 'sm', color: 'red' })}>{errors.errorUploading}</small>
+          )}
           <small className={css({ fontSize: 'sm', color: 'gray.11' })}>
             If your image is not spooky enough, it will be automatically removed.
           </small>
