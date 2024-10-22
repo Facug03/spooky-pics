@@ -34,6 +34,7 @@ export function Steps({ tags }: Props) {
 
       <HideStep show={step === 2}>
         <EditImage
+          aspectRatio={aspectRatio}
           changeStep={(newStep) => setStep(newStep)}
           publicId={publicId}
           step={step}

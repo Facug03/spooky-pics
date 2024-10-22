@@ -36,6 +36,7 @@ const options = [
 ]
 
 interface Props {
+  aspectRatio: string
   publicId: string
   step: number
   changeStep: (step: number) => void
@@ -43,7 +44,7 @@ interface Props {
   changeTransformations: (transformation: Pick<GetCldImageUrlOptions, 'replaceBackground' | 'replace' | 'remove'>) => void
 }
 
-export function EditImage({ publicId, step, changeStep, transformations, changeTransformations }: Props) {
+export function EditImage({ publicId, step, changeStep, transformations, changeTransformations, aspectRatio }: Props) {
   const [urlTransformed, setUrlTransformed] = useState(getCldImageUrl({ src: publicId, width: 800 }))
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -81,6 +82,24 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
     })
       .then(([error]) => {
         if (error) {
+          if (aspectRatio.length > 0) {
+            const splitAspectRatio = aspectRatio.split('/')
+            const width = Number.parseInt(splitAspectRatio[0])
+            const height = Number.parseInt(splitAspectRatio[1])
+
+            if (!Number.isNaN(width) && !Number.isNaN(height)) {
+              const maxMegapixels = 25
+              const megapixels = (width * height) / 1_000_000
+
+              if (megapixels > maxMegapixels) {
+                setError(
+                  `The image size is ${megapixels.toFixed(2)} megapixels, which exceeds the limit of ${maxMegapixels} megapixels to transform. Please select a smaller image.`
+                )
+                return
+              }
+            }
+          }
+
           setError('An error has ocurred while transforming the image')
 
           return
