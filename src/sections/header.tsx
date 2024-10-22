@@ -16,16 +16,16 @@ export async function Header() {
 
   return (
     <header className={css({ paddingY: 2 })}>
-      <nav className={hstack({ justify: 'space-between', alignItems: 'center' })}>
+      <nav className={hstack({ justify: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '4' })}>
         <Link href="/" aria-label="Spooky Pics">
           <div className={css({ position: 'relative', height: '8', width: '36' })}>
             <Image src="/spooky-logo.svg" alt="Spooky Pics" fill />
           </div>
         </Link>
 
-        {!user && (
-          <Button asChild bgColor="primary">
-            <Link href="/login">
+        <div className={hstack({ gap: '2', sm: { gap: '6' } })}>
+          <Button asChild bgColor={user ? 'primary' : ''}>
+            <Link href="/upload">
               <span
                 className={css({
                   display: 'none',
@@ -34,17 +34,17 @@ export async function Header() {
                   }
                 })}
               >
-                Log in
+                Upload
               </span>{' '}
-              <UserCircle size={32} />
+              <UploadSimple className={css({ height: '5', width: '5' })} size={32} />
             </Link>
           </Button>
-        )}
 
-        {user && (
-          <div className={hstack({ gap: '2', sm: { gap: '6' } })}>
-            <Button asChild size="sm" bgColor="primary">
-              <Link href="/upload">
+          {user ? (
+            <UserMenu avatarURL={user.user_metadata?.avatar_url ?? ''} fullName={user.user_metadata?.full_name ?? ''} />
+          ) : (
+            <Button asChild bgColor="primary">
+              <Link href="/login">
                 <span
                   className={css({
                     display: 'none',
@@ -53,15 +53,13 @@ export async function Header() {
                     }
                   })}
                 >
-                  Upload
+                  Log in
                 </span>{' '}
-                <UploadSimple size={32} />
+                <UserCircle size={32} />
               </Link>
             </Button>
-
-            <UserMenu avatarURL={user.user_metadata?.avatar_url ?? ''} fullName={user.user_metadata?.full_name ?? ''} />
-          </div>
-        )}
+          )}
+        </div>
       </nav>
     </header>
   )
