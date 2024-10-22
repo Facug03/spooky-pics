@@ -22,11 +22,11 @@ export function Items({ tag, items }: Props) {
     <section className={css({ color: 'primary' })}>
       {photos.length > 0 && (
         <>
-          <div className={css({ minH: items.length >= 10 ? '90vh' : 'auto' })}>
+          <div className={css({ minH: items.length >= 20 ? '90vh' : 'auto' })}>
             <Masonry items={photos} />
           </div>
 
-          {!reachEnd && photos.length >= 10 && (
+          {!reachEnd && photos.length >= 20 && (
             <div className={css({ display: 'flex', width: '100%', justifyContent: 'center', padding: '3' })} ref={ref}>
               <Spinner size="lg" />
             </div>
