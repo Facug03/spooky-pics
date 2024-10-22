@@ -74,8 +74,6 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
       width: 800
     })
 
-    console.log({ url })
-
     getTransformedImage({
       url,
       maxRetries: 10,
@@ -142,8 +140,8 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
         className={hstack({
           flexDirection: 'column',
           alignItems: 'flex-start',
-          gap: '2',
-          md: { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }
+          gap: '4',
+          md: { gap: '2', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }
         })}
       >
         <Heading

@@ -24,7 +24,8 @@ export function UploadImage({ changeAspectRatio }: Props) {
         className={hstack({
           flexDirection: 'column',
           alignItems: 'flex-start',
-          md: { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }
+          gap: '4',
+          md: { gap: '2', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }
         })}
       >
         <Heading

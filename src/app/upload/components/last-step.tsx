@@ -91,8 +91,8 @@ export function LastStep({ aspectRatio, tags, changeStep, publicId, step, transf
         className={hstack({
           flexDirection: 'column',
           alignItems: 'flex-start',
-          gap: '2',
-          md: { justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }
+          gap: '4',
+          md: { gap: '2', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }
         })}
       >
         <Heading
