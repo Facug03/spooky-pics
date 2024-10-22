@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense, cache } from 'react'
 
+import { MasonrySkeleton } from '@/components/skeletons/masonry-skeleton'
 import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Heading } from '@/components/ui/heading'
@@ -186,7 +187,7 @@ export default async function Photo({ params }: Props) {
         )}
       </section>
 
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<MasonrySkeleton />}>
         <Related postId={params.id} tags={tag} />
       </Suspense>
     </main>
