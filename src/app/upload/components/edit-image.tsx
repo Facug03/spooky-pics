@@ -204,7 +204,7 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
       </header>
 
       <Text as="p" marginBottom="8" fontSize={{ smDown: '0.950rem', sm: 'md' }}>
-        Change the background, replace or remove things with our AI.
+        Use our AI to modify the background, substitute objects, or remove them from the image.
       </Text>
 
       <div>
@@ -301,7 +301,7 @@ export function EditImage({ publicId, step, changeStep, transformations, changeT
             >
               <Field.Root maxWidth="max-content" disabled={isLoading}>
                 <Field.Label>Prompt to generate background</Field.Label>
-                <Field.Input name="background" placeholder="Add fire..." />
+                <Field.Input name="background" placeholder="Create a dark forest" />
               </Field.Root>
 
               <Button variant="outline" disabled={isLoading}>
