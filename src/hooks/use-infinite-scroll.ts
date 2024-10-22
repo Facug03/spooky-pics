@@ -9,7 +9,9 @@ interface Props {
 }
 
 export function useInfiniteScroll({ url }: Props) {
-  const { ref, inView } = useInView()
+  const { ref, inView } = useInView({
+    rootMargin: '100px 0px 0px 0px'
+  })
   const { data, setSize } = useSWRInfinite(
     (page, previousData) => {
       if (!inView) return null
