@@ -44,6 +44,7 @@ Comparte tus momentos más espeluznantes con el mundo, descubre disfraces, decor
 
 ## TODO
 
+- Agregar página de error y not found.
 - Agregar dark mode.
 - Agregar contador de likes y descargas.
 - Mostrar datos de los posts cuando haces hover en el masonry.
