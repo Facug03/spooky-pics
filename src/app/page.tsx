@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ReactCompareSlider } from 'react-compare-slider'
 
+import { BatsBg } from '@/components/bats-bg'
 import { Button } from '@/components/ui/button'
 import { Heading } from '@/components/ui/heading'
 import { Text } from '@/components/ui/text'
@@ -37,6 +38,7 @@ export default async function Home() {
       })}
     >
       <section>
+        <BatsBg />
         <Heading
           as="h1"
           className={css({
