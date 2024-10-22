@@ -2,6 +2,7 @@ import { CalendarBlank } from '@phosphor-icons/react/dist/ssr'
 import type { Metadata } from 'next'
 import { getCldOgImageUrl } from 'next-cloudinary'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Suspense, cache } from 'react'
 
 import { Avatar } from '@/components/ui/avatar'
@@ -177,8 +178,8 @@ export default async function Photo({ params }: Props) {
         {tag.length > 0 && (
           <div className={hstack({ gap: '2' })}>
             {tag.map((tag) => (
-              <Button key={tag.name} size="sm" variant="subtle" textTransform="capitalize" fontWeight="normal">
-                {tag.name}
+              <Button key={tag.name} size="sm" variant="subtle" textTransform="capitalize" fontWeight="normal" asChild>
+                <Link href={`/tag/${tag.name}`}>{tag.name}</Link>
               </Button>
             ))}
           </div>
