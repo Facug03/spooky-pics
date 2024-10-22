@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ReactCompareSlider } from 'react-compare-slider'
 
 import { BatsBg } from '@/components/bats-bg'
+import { MasonrySkeleton } from '@/components/skeletons/masonry-skeleton'
 import { Button } from '@/components/ui/button'
 import { Heading } from '@/components/ui/heading'
 import { Text } from '@/components/ui/text'
