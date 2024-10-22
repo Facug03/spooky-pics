@@ -12,7 +12,6 @@ interface Props {
 
 export async function Related({ postId, tags }: Props) {
   const supabase = createClient()
-
   const { data, error } = await supabase
     .from('post')
     .select('*, tag (*)')
