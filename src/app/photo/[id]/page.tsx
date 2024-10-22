@@ -1,5 +1,8 @@
-import { CalendarBlank, DownloadSimple } from '@phosphor-icons/react/dist/ssr'
+import { CalendarBlank } from '@phosphor-icons/react/dist/ssr'
+import type { Metadata } from 'next'
+import { getCldOgImageUrl } from 'next-cloudinary'
 import Image from 'next/image'
+import { Suspense, cache } from 'react'
 
 import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -8,7 +11,6 @@ import { Text } from '@/components/ui/text'
 import { createClient } from '@/utils/supabase/server'
 import { css } from '@styled-system/css'
 import { hstack, stack } from '@styled-system/patterns'
-import { Suspense } from 'react'
 import { Download } from './components/download'
 import { Like } from './components/like'
 import { Related } from './sections/related'
@@ -19,13 +21,47 @@ interface Props {
   }
 }
 
+const getPhoto = cache(async (id: string) => {
+  const supabase = createClient()
+  const resp = await supabase.from('post').select('*, user!post_user_id_fkey1 (*), tag (name)').eq('id', id).single()
+
+  return resp
+})
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { error, data } = await getPhoto(params.id)
+
+  if (error) {
+    throw error
+  }
+
+  const url = getCldOgImageUrl({
+    src: data.image_public_id,
+    width: 800
+  })
+
+  return {
+    title: `${data.title || 'Spooky Pic'} | Spooky Pics`,
+    description: `${data.description || 'A mysterious and captivating photo from Spooky Pics.'}`,
+    openGraph: {
+      type: 'website',
+      siteName: 'Spooky Pics',
+      locale: 'en_US',
+      description: `${data.description || 'A mysterious and captivating photo from Spooky Pics.'}`,
+      title: `${data.title || 'Spooky Pic'} | Spooky Pics`,
+      images: [
+        {
+          url: url,
+          width: 800
+        }
+      ]
+    }
+  }
+}
+
 export default async function Photo({ params }: Props) {
   const supabase = createClient()
-  const { error, data } = await supabase
-    .from('post')
-    .select('*, user!post_user_id_fkey1 (*), tag (name)')
-    .eq('id', params.id)
-    .single()
+  const { error, data } = await getPhoto(params.id)
   const { data: dataUser } = await supabase.auth.getUser()
   const { data: dataLike } = await supabase
     .from('like')

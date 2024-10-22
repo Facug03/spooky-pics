@@ -1,8 +1,15 @@
 import { createClient } from '@/utils/supabase/server'
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { stack } from '@styled-system/patterns'
 import { Steps } from './sections/steps'
+
+export const metadata: Metadata = {
+  title: 'Upload Your Spooky Images | Spooky Pics',
+  description:
+    'Share your unique spooky images with the Spooky Pics community. Upload now and let others discover your haunting creations!'
+}
 
 export default async function Upload() {
   const supabase = createClient()
