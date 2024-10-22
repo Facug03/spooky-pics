@@ -14,7 +14,11 @@ import { hstack, stack } from '@styled-system/patterns'
 export default async function Home() {
   const supabase = createClient()
   const { data: dataUser } = await supabase.auth.getUser()
-  const { error: errorPost, data: dataPost } = await supabase.from('post').select('*').range(0, 19)
+  const { error: errorPost, data: dataPost } = await supabase
+    .from('post')
+    .select('*')
+    .range(0, 19)
+    .order('created_at', { ascending: false })
   const { error: errorTag, data: dataTag } = await supabase.from('tag').select('*').order('name', { ascending: true })
 
   if (errorPost || !dataPost || errorTag || !dataTag) {
@@ -77,8 +81,8 @@ export default async function Home() {
           </Button>
 
           {!dataUser.user && (
-            <Button size="lg" variant="outline">
-              Register
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/login?mode=register">Sign up</Link>
             </Button>
           )}
         </div>
