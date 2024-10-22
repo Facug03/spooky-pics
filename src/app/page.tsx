@@ -152,7 +152,6 @@ export default async function Home() {
         />
       </section>
 
-      {/* grid({ gridTemplateColumns: 'repeat(auto-fit, minmax(9.375rem, 1fr))', gap: '2' }) */}
       <section>
         <ul
           className={css({
