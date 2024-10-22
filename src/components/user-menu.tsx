@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 import { signOut } from '@/actions/log-out'
-import { Heart, SignOut } from '@phosphor-icons/react'
+import { SignOut } from '@phosphor-icons/react'
 import { css } from '@styled-system/css'
 import { stack } from '@styled-system/patterns'
 import { Avatar } from './ui/avatar'
@@ -58,12 +58,12 @@ export function UserMenu({ avatarURL, fullName }: Props) {
               gap: 2
             })}
           >
-            <li>
+            {/* <li>
               <Button variant="link">
                 Likes <Heart size={24} />
               </Button>
-            </li>
-            <hr className={css({ bg: 'gray' })} />
+            </li> */}
+            {/* <hr className={css({ bg: 'gray' })} /> */}
             <li>
               <Button variant="link" onClick={() => signOut()}>
                 Sign out <SignOut size={24} />
