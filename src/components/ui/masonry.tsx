@@ -20,15 +20,15 @@ export const Masonry = ({ items }: Props) => {
         media: [640, 768, 1024]
       }}
       render={(item) => (
-        <Link
-          href={`/photo/${item.id}`}
-          key={item.id}
-          className={css({
-            width: '100%',
-            height: 'auto'
-          })}
-        >
-          <img src={item.image_url} alt={item.title ?? 'image'} />
+        <Link href={`/photo/${item.id}`} key={item.id}>
+          <img
+            className={css({
+              width: '100%',
+              height: 'auto'
+            })}
+            src={item.image_url}
+            alt={item.title ?? 'image'}
+          />
         </Link>
       )}
     />
